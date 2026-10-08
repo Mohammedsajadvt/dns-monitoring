@@ -1,9 +1,4 @@
-const API_BASE =
-  typeof window !== 'undefined' &&
-  window.location.origin.includes('http') &&
-  !window.location.origin.includes('file:')
-    ? ''
-    : 'http://127.0.0.1:8000';
+const API_BASE = 'https://dns-monitoring.onrender.com';
 
 const getHeaders = (extraHeaders = {}) => {
   const headers = {
@@ -185,19 +180,19 @@ export const api = {
   triggerSimulation: async (networkId, isThreat) => {
     const sampleDomains = isThreat
       ? [
-          'coinhive.com',
-          'paypa1-security-verify.com',
-          'x78q3948u32kalsdkf.biz',
-          'crypto-webminer.xyz',
-        ]
+        'coinhive.com',
+        'paypa1-security-verify.com',
+        'x78q3948u32kalsdkf.biz',
+        'crypto-webminer.xyz',
+      ]
       : [
-          'youtube.com',
-          'github.com',
-          'instagram.com',
-          'wikipedia.org',
-          'netflix.com',
-          'whatsapp.com',
-        ];
+        'youtube.com',
+        'github.com',
+        'instagram.com',
+        'wikipedia.org',
+        'netflix.com',
+        'whatsapp.com',
+      ];
 
     const domain =
       sampleDomains[Math.floor(Math.random() * sampleDomains.length)];

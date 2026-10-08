@@ -57,13 +57,13 @@ class ApiService {
 
   void _initDefaultBaseUrl() {
     if (kIsWeb) {
-      _baseUrl = 'http://127.0.0.1:8000';
+      _baseUrl = 'http://[IP_ADDRESS]';
     } else {
       try {
         if (Platform.isAndroid) {
-          _baseUrl = 'http://10.0.2.2:8000';
+          _baseUrl = 'http://[IP_ADDRESS]';
         } else {
-          _baseUrl = 'http://127.0.0.1:8000';
+          _baseUrl = 'http://[IP_ADDRESS]';
         }
       } catch (_) {
         _baseUrl = 'http://127.0.0.1:8000';
@@ -260,7 +260,8 @@ class ApiService {
   Future<NetworkModel?> autoDetectNetwork() async {
     try {
       final response = await http
-          .post(Uri.parse('$_baseUrl/api/networks/auto-detect'), headers: _getHeaders())
+          .post(Uri.parse('$_baseUrl/api/networks/auto-detect'),
+              headers: _getHeaders())
           .timeout(const Duration(seconds: 6));
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
@@ -399,7 +400,8 @@ class ApiService {
       var targetNetId = networkId;
       if (targetNetId == 'all' || targetNetId.isEmpty) {
         final nets = await getNetworks();
-        targetNetId = nets.isNotEmpty ? nets.first.networkId : 'net_default_primary';
+        targetNetId =
+            nets.isNotEmpty ? nets.first.networkId : 'net_default_primary';
       }
 
       await http.post(
