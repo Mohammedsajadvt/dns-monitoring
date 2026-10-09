@@ -10,7 +10,7 @@ class ApiService {
   static final ApiService _instance = ApiService._internal();
   factory ApiService() => _instance;
 
-  String _baseUrl = 'http://127.0.0.1:8000';
+  String _baseUrl = 'https://dns-monitoring.onrender.com';
   String get baseUrl => _baseUrl;
 
   set baseUrl(String url) {
@@ -56,19 +56,7 @@ class ApiService {
   }
 
   void _initDefaultBaseUrl() {
-    if (kIsWeb) {
-      _baseUrl = 'http://[IP_ADDRESS]';
-    } else {
-      try {
-        if (Platform.isAndroid) {
-          _baseUrl = 'http://[IP_ADDRESS]';
-        } else {
-          _baseUrl = 'http://[IP_ADDRESS]';
-        }
-      } catch (_) {
-        _baseUrl = 'http://127.0.0.1:8000';
-      }
-    }
+    _baseUrl = 'https://dns-monitoring.onrender.com';
   }
 
   Map<String, String> _getHeaders() {
@@ -185,8 +173,9 @@ class ApiService {
     } catch (_) {}
 
     final channelId = networkId.isEmpty ? 'all' : networkId;
-    final wsUrl =
-        '${_baseUrl.replaceFirst(RegExp(r'^http'), 'ws')}/ws/$channelId';
+    final wsProtocol = _baseUrl.startsWith('https') ? 'wss' : 'ws';
+    final cleanHost = _baseUrl.replaceFirst(RegExp(r'^https?:\/\/'), '');
+    final wsUrl = '$wsProtocol://$cleanHost/ws/$channelId';
 
     try {
       _wsChannel = WebSocketChannel.connect(Uri.parse(wsUrl));

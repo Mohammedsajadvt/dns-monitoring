@@ -292,6 +292,28 @@ class _AuthScreenState extends State<AuthScreen> with SingleTickerProviderStateM
                     ),
                     const SizedBox(height: 16),
 
+                    // Guest Demo Mode Option
+                    OutlinedButton.icon(
+                      onPressed: () {
+                        context.read<AuthProvider>().loginAsGuest();
+                        widget.onAuthenticated();
+                      },
+                      icon: const Icon(Icons.remove_red_eye_outlined,
+                          size: 16, color: Color(0xFF94A3B8)),
+                      label: const Text('Explore Dashboard as Guest',
+                          style: TextStyle(
+                              color: Color(0xFF94A3B8), fontSize: 12)),
+                      style: OutlinedButton.styleFrom(
+                        side: BorderSide(
+                            color: Colors.white.withOpacity(0.1)),
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10)),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 16, vertical: 10),
+                      ),
+                    ),
+                    const SizedBox(height: 12),
+
                     // Server Configuration Link
                     TextButton.icon(
                       onPressed: _showServerConfigDialog,
