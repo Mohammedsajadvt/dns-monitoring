@@ -36,7 +36,7 @@ class WebSocketService {
       this.isExplicitClose = true;
       try {
         this.ws.close();
-      } catch (_) {}
+      } catch (_) { }
     }
 
     const channel = networkId || 'all';
@@ -148,7 +148,7 @@ class WebSocketService {
     if (this.ws) {
       try {
         this.ws.close();
-      } catch (_) {}
+      } catch (_) { }
       this.ws = null;
     }
   }
