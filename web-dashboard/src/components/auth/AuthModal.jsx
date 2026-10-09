@@ -12,6 +12,7 @@ import {
 import {
   loginUser,
   registerUser,
+  loginAsGuest,
   clearAuthError,
 } from '../../store/slices/authSlice';
 import { addToast } from '../../store/slices/uiSlice';
@@ -53,7 +54,13 @@ export default function AuthModal({ isOpen, onClose, isRequired = false }) {
       );
       if (onClose) onClose();
     } catch (err) {
-      // Error handled by redux
+      const errMsg = typeof err === 'string' ? err : 'Incorrect email or password';
+      dispatch(
+        addToast({
+          message: errMsg,
+          type: 'error',
+        })
+      );
     }
   };
 
@@ -63,11 +70,15 @@ export default function AuthModal({ isOpen, onClose, isRequired = false }) {
     dispatch(clearAuthError());
 
     if (regPassword !== regConfirm) {
-      setLocalError('Passwords do not match');
+      const msg = 'Passwords do not match';
+      setLocalError(msg);
+      dispatch(addToast({ message: msg, type: 'error' }));
       return;
     }
     if (regPassword.length < 6) {
-      setLocalError('Password must be at least 6 characters');
+      const msg = 'Password must be at least 6 characters';
+      setLocalError(msg);
+      dispatch(addToast({ message: msg, type: 'error' }));
       return;
     }
 
@@ -87,8 +98,25 @@ export default function AuthModal({ isOpen, onClose, isRequired = false }) {
       );
       if (onClose) onClose();
     } catch (err) {
-      // Error handled by redux
+      const errMsg = typeof err === 'string' ? err : 'Registration failed';
+      dispatch(
+        addToast({
+          message: errMsg,
+          type: 'error',
+        })
+      );
     }
+  };
+
+  const handleGuestLogin = () => {
+    dispatch(loginAsGuest());
+    dispatch(
+      addToast({
+        message: 'Logged in as Guest Viewer.',
+        type: 'info',
+      })
+    );
+    if (onClose) onClose();
   };
 
   const displayError = localError || error;
@@ -376,6 +404,43 @@ export default function AuthModal({ isOpen, onClose, isRequired = false }) {
             </button>
           </form>
         )}
+
+        {/* Guest Demo Divider */}
+        <div
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: '12px',
+            margin: '14px 0 6px 0',
+          }}
+        >
+          <div style={{ flex: 1, height: '1px', background: 'var(--border-subtle)' }} />
+          <span style={{ fontSize: '0.72rem', color: 'var(--text-muted)', fontWeight: 600 }}>OR</span>
+          <div style={{ flex: 1, height: '1px', background: 'var(--border-subtle)' }} />
+        </div>
+
+        <button
+          type="button"
+          onClick={handleGuestLogin}
+          style={{
+            width: '100%',
+            padding: '10px 16px',
+            borderRadius: '8px',
+            background: 'rgba(255, 255, 255, 0.04)',
+            border: '1px solid var(--border-subtle)',
+            color: 'var(--text-secondary)',
+            fontSize: '0.82rem',
+            fontWeight: 600,
+            cursor: 'pointer',
+            transition: 'all 0.2s',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            gap: '8px',
+          }}
+        >
+          Explore Dashboard as Guest Viewer
+        </button>
       </div>
     </div>
   );
