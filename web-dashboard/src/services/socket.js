@@ -1,3 +1,4 @@
+import { API_BASE } from './api';
 import { addLiveLog } from '../store/slices/logsSlice';
 import { addLiveThreat } from '../store/slices/threatsSlice';
 import { updateLiveDevice } from '../store/slices/devicesSlice';
@@ -38,15 +39,16 @@ class WebSocketService {
       } catch (_) {}
     }
 
-    const host =
-      typeof window !== 'undefined' &&
-      window.location.origin.includes('http') &&
-      !window.location.origin.includes('file:')
-        ? window.location.host
-        : '127.0.0.1:8000';
-    const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
     const channel = networkId || 'all';
-    const wsUrl = `${protocol}//${host}/ws/${channel}`;
+    let wsUrl;
+    try {
+      const url = new URL(API_BASE);
+      const protocol = url.protocol === 'https:' ? 'wss:' : 'ws:';
+      wsUrl = `${protocol}//${url.host}/ws/${channel}`;
+    } catch {
+      const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
+      wsUrl = `${protocol}//${window.location.host}/ws/${channel}`;
+    }
 
     try {
       this.ws = new WebSocket(wsUrl);
